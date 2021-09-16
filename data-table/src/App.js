@@ -1,16 +1,21 @@
 import './App.css';
-import { Component } from 'react';
-import TableHtml from './TableHtml/TableHtml';
-import _ from 'lodash'
-import Search from './Search/Search';
-import Profile from './Profile/Profile';
+import { Component } from 'react'
+import ReactPaginate from 'react-paginate'
+import TableHtml from './TableHtml/TableHtml'
+import _, { filter } from 'lodash'
+import Search from './Search/Search'
+import Profile from './Profile/Profile'
+
 
 class App extends Component {
 
 state = {
   data: [],
   row: null,
-  search: ''
+  search: '',
+  sort: ' asc',
+  sortField: 'id',
+  currentPage: 0
 }
 
 async componentDidMount() {
@@ -19,16 +24,20 @@ async componentDidMount() {
 
       
       this.setState({
-         data
+         data: _.orderBy(data, this.state.sortField, this.state.sort)
      })
     }
 
 onSort = sortField => {
   const clonedData = this.state.data.concat()
-  const data = _.orderBy(clonedData,sortField )
+  const sort = this.state.sort === ' asc' ? 'desc' : ' asc'
+  const data = _.orderBy(clonedData,sortField, sort )
 
   this.setState({
     data,
+    sort,
+    sortField
+
   })
 }
 
@@ -37,7 +46,8 @@ onRowSelect = row => {
 }
 
 searchHandler = search => {
-  this.setState({search})
+ 
+  this.setState({search, currentPage: 0})
 }
 
 getFilteredData() {
@@ -51,21 +61,49 @@ getFilteredData() {
   })
 }
 
+handlePageClick = ({selected}) => {
+  this.setState({currentPage: selected})
+}
+
     render() {
+      const pageSize  = 20
       const filteredData = this.getFilteredData()
+      const pageCount = Math.ceil(filteredData / pageSize)
+      const displayData = _.chunk(this.state.data, pageSize)[this.state.currentPage]
         return (
         <div className="container">
+
           <Search onSearch={this.searchHandler}/>
-          {
-              
+          { 
              <TableHtml
              data={filteredData}
              onSort={this.onSort}
+             sort={this.state.sort}
+             sortField={this.state.sortField}
              onRowSelect={this.onRowSelect}
-
              />
-
           }
+
+{
+             this.state.data.length > pageSize 
+            ? <ReactPaginate
+            previousLabel={'previous'}
+            nextLabel={'next'}
+            breakLabel={'...'}
+            breakClassName={'break-me'}
+            pageCount={pageCount}
+            marginPagesDisplayed={2}
+            pageRangeDisplayed={5}
+            onPageChange={this.handlePageClick}
+            containerClassName={'pagination'}
+            activeClassName={'active'}
+            pageClassName ="page-item"
+            pageLinkClassName="page-link"
+            forcePage={this.state.currentPage}
+          /> : null
+          }
+
+         
 
           {
             this.state.row

@@ -10,11 +10,12 @@ export default props => (
              <th onClick={props.onSort.bind(null, 'id')}>id
                 {props.sortField ==='id' ? <small>{props.sort}</small> : null}
              </th>
-             <th onClick={props.onSort.bind(null, 'firstName')}>First name</th>
+             <th onClick={props.onSort.bind(null, 'firstName')}>First name
+             </th>
              <th onClick={props.onSort.bind(null, 'lastName')}>Last name</th>
              <th onClick={props.onSort.bind(null, 'email')}>Email</th>
              <th onClick={props.onSort.bind(null, 'phone')}>Phone</th>
-             <th onClick={props.onSort.bind(null, 'state')}>State</th>
+             <th onClick={props.onSort.bind(null, 'adress.state')}>State</th>
          </tr>
          </thead>
          <tbody>
