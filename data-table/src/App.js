@@ -1,10 +1,11 @@
 import './App.css';
-import { Component } from 'react'
+import React, { Component } from 'react'
 import ReactPaginate from 'react-paginate'
 import TableHtml from './TableHtml/TableHtml'
 import _, { filter } from 'lodash'
 import Search from './Search/Search'
 import Profile from './Profile/Profile'
+
 
 
 class App extends Component {
@@ -15,7 +16,8 @@ state = {
   search: '',
   sort: ' asc',
   sortField: 'id',
-  currentPage: 0
+  currentPage: 0,
+  displayData: []
 }
 
 async componentDidMount() {
@@ -66,25 +68,33 @@ handlePageClick = ({selected}) => {
 }
 
     render() {
-      const pageSize  = 20
+      const pageSize  = 10
       const filteredData = this.getFilteredData()
-      const pageCount = Math.ceil(filteredData / pageSize)
-      const displayData = _.chunk(this.state.data, pageSize)[this.state.currentPage]
+      const pageCount = Math.ceil(filteredData.length / pageSize)
+      const displayData = _.chunk(filteredData, pageSize)[this.state.currentPage]
+ 
         return (
         <div className="container">
 
-          <Search onSearch={this.searchHandler}/>
+        
+
+          
           { 
-             <TableHtml
-             data={filteredData}
+          <React.Fragment>
+            <Search onSearch={this.searchHandler}/>
+            <TableHtml
+             data={displayData}
              onSort={this.onSort}
              sort={this.state.sort}
              sortField={this.state.sortField}
              onRowSelect={this.onRowSelect}
              />
+          </React.Fragment>
+
           }
 
-{
+
+          {
              this.state.data.length > pageSize 
             ? <ReactPaginate
             previousLabel={'previous'}

@@ -15,3 +15,12 @@ html {
   align-items: center;
   flex-direction: column;
 }
+
+.pagination {
+  display: flex;
+  list-style-type: none;
+}
+
+.pagination li {
+  padding-left: 10px;
+}

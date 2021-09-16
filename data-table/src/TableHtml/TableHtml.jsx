@@ -16,10 +16,10 @@ export default props => (
              <th onClick={props.onSort.bind(null, 'email')}>Email</th>
              <th onClick={props.onSort.bind(null, 'phone')}>Phone</th>
              <th onClick={props.onSort.bind(null, 'adress.state')}>State</th>
-         </tr>
+         </tr>  
          </thead>
          <tbody>
-         {props.data.map(item =>(
+         {props.data && props.data.map((item) => (
              <tr key={item.id + item.phone} onClick={props.onRowSelect.bind(null, item)}>
                  <td>{item.id}</td>
                  <td>{item.firstName}</td>
